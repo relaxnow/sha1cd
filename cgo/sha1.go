@@ -1,15 +1,8 @@
 package cgo
 
-// #include <lib/sha1.h>
-// #include <lib/sha1.c>
-// #include <lib/ubc_check.h>
-// #include <lib/ubc_check.c>
-import "C"
-
 import (
 	"crypto"
 	"hash"
-	"unsafe"
 )
 
 const (
@@ -27,17 +20,15 @@ func New() hash.Hash {
 	return d
 }
 
+type SHA1_CTX struct {
+}
+
 type digest struct {
-	ctx C.SHA1_CTX
+	ctx SHA1_CTX
 }
 
 func (d *digest) sum() ([]byte, bool) {
 	b := make([]byte, Size)
-	c := C.SHA1DCFinal((*C.uchar)(unsafe.Pointer(&b[0])), &d.ctx)
-	if c != 0 {
-		return b, true
-	}
-
 	return b, false
 }
 
@@ -54,7 +45,6 @@ func (d *digest) CollisionResistantSum(in []byte) ([]byte, bool) {
 }
 
 func (d *digest) Reset() {
-	C.SHA1DCInit(&d.ctx)
 }
 
 func (d *digest) Size() int { return Size }

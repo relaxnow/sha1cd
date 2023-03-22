@@ -1,6 +1,3 @@
-//go:build !amd64 || noasm || !gc
-// +build !amd64 noasm !gc
-
 package ubc
 
 // Check takes as input an expanded message block and verifies the unavoidable bitconditions
